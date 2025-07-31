@@ -1,4 +1,4 @@
-CREATE TABLE 'match' (
+CREATE TABLE match (
                        id SERIAL PRIMARY KEY,
                        description VARCHAR(255) NOT NULL,
                        match_date DATE NOT NULL,
@@ -15,6 +15,6 @@ CREATE TABLE match_odds (
                             odd DECIMAL(5,2) NOT NULL,
                             CONSTRAINT fk_match
                                 FOREIGN KEY (match_id)
-                                    REFERENCES 'match'(id)
+                                    REFERENCES match(id)
                                     ON DELETE CASCADE
 );

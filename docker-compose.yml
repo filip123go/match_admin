@@ -14,5 +14,16 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  match-api:
+    build: .
+    container_name: match-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_FLYWAY_ENABLED: "true"
+
 volumes:
   pgdata:
