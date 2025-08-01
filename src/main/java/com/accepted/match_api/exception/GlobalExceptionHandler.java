@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         );
 
         ex.getBindingResult().getGlobalErrors().forEach(error ->
-                errors.put(error.getObjectName(), error.getDefaultMessage()) // capture class-level errors
+                errors.put(error.getObjectName(), error.getDefaultMessage())
         );
 
         return ResponseEntity.badRequest().body(errors);

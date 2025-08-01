@@ -8,7 +8,7 @@ public class DifferentTeamsValidator implements ConstraintValidator<DifferentTea
 
     @Override
     public boolean isValid(MatchDto dto, ConstraintValidatorContext context) {
-        if (dto.getTeamA() == null || dto.getTeamB() == null) return true; // let @NotBlank handle nulls
+        if (dto.getTeamA() == null || dto.getTeamB() == null) return true;
 
         return !dto.getTeamA().equalsIgnoreCase(dto.getTeamB());
     }

@@ -1,5 +1,6 @@
 package com.accepted.match_api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,13 +16,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MatchOddsDto {
+
     private Long id;
 
     @NotBlank(message = "Specifier is required")
-    private String specifier;
-
-    @NotNull(message = "Odd is required")
+    @Schema(example = "1 OR X OR 2")
     @Pattern(regexp = "1|X|2", message = "Specifier must be one of: 1, X, 2")
+    private String specifier;
+    @NotNull(message = "Odd is required")
     private BigDecimal odd;
 
     private Long matchId;

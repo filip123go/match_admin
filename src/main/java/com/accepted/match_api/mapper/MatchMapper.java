@@ -1,17 +1,15 @@
 package com.accepted.match_api.mapper;
 
 import com.accepted.match_api.dto.MatchDto;
-import com.accepted.match_api.dto.MatchOddsDto;
 import com.accepted.match_api.entity.Match;
-import com.accepted.match_api.entity.MatchOdds;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Component
 public class MatchMapper {
+
+    @Autowired
+    private MatchOddsMapper matchOddsMapper;
 
     public MatchDto toDto(Match match) {
         if (match == null) return null;
@@ -24,21 +22,8 @@ public class MatchMapper {
                 .teamA(match.getTeamA())
                 .teamB(match.getTeamB())
                 .sport(match.getSport())
-                .odds(mapMatchOdds(match))
+                .odds(matchOddsMapper.toDtoList(match.getOdds()))
                 .build();
-    }
-
-    private List<MatchOddsDto> mapMatchOdds(Match match) {
-        if (match.getOdds() == null) return null;
-
-        return match.getOdds().stream()
-                .map(odds -> MatchOddsDto.builder()
-                        .id(odds.getId())
-                        .specifier(odds.getSpecifier())
-                        .odd(odds.getOdd())
-                        .matchId(match.getId())
-                        .build())
-                .collect(Collectors.toList());
     }
 
     public Match toEntity(MatchDto dto) {
@@ -55,16 +40,7 @@ public class MatchMapper {
                 .build();
 
         if (dto.getOdds() != null) {
-            List<MatchOdds> odds = dto.getOdds().stream()
-                    .map(oddsDto -> MatchOdds.builder()
-                            .id(oddsDto.getId())
-                            .specifier(oddsDto.getSpecifier())
-                            .odd(oddsDto.getOdd())
-                            .match(match)
-                            .build())
-                    .collect(Collectors.toList());
-
-            match.setOdds(odds);
+            match.setOdds(matchOddsMapper.toEntityList(dto.getOdds(), match));
         }
 
         return match;

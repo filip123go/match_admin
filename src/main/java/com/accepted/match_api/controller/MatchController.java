@@ -13,12 +13,62 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/matches")
+@CrossOrigin(origins = "*") //TODO: THIS IS ONLY FOR DEVELOPMENT, IN PRODUCTION ADD THE ACTUAL FRONTEND URL
 @Validated
 @Tag(name = "Match Controller", description = "Manage sports matches")
 public class MatchController {
 
     private final MatchService matchService;
 
+    private static final String MATCH_EXAMPLE_JSON = """
+{
+  "description": "This is the description",
+  "matchDate": "2026-10-15",
+  "matchTime": "20:30:00",
+  "teamA": "TEAM 1",
+  "teamB": "TEAM 2",
+  "sport": "FOOTBALL | BASKETBALL",
+      "odds": [
+        {
+          "specifier": "1",
+          "odd": 1.75
+        },
+        {
+          "specifier": "X",
+          "odd": 3.2
+        },
+        {
+          "specifier": "2",
+          "odd": 4.1
+        }
+      ]
+    }
+""";
+
+    private static final String UPDATE_MATCH_EXAMPLE = """
+    {
+      "description": "OSFP - PAO",
+      "matchDate": "2026-08-01",
+      "matchTime": "20:30:00",
+      "teamA": "Staros",
+      "teamB": "PAO",
+      "sport": "FOOTBALL",
+      "odds": [
+        {
+          "specifier": "1",
+          "odd": 1.75
+        },
+        {
+          "specifier": "X",
+          "odd": 3.2
+        },
+        {
+          "specifier": "2",
+          "odd": 4.1
+        }
+      ]
+    }
+""";
     public MatchController(MatchService matchService) {
         this.matchService = matchService;
     }
@@ -36,13 +86,32 @@ public class MatchController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a new match")
+    @Operation(
+            summary = "Create a new match",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(
+                            mediaType = "application/json",
+                            examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                                    value = MATCH_EXAMPLE_JSON
+                            )
+                    )
+            )
+    )
     public ResponseEntity<MatchDto> createMatch(@Valid @RequestBody MatchDto dto) {
         return ResponseEntity.ok(matchService.create(dto));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update an existing match")
+    @Operation(summary = "Update an existing match",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @io.swagger.v3.oas.annotations.media.Content(
+                            mediaType = "application/json",
+                            examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                                    value = UPDATE_MATCH_EXAMPLE
+                            )
+                    )
+            )
+    )
     public ResponseEntity<MatchDto> updateMatch(@PathVariable Long id, @Valid @RequestBody MatchDto dto) {
         return ResponseEntity.ok(matchService.update(id, dto));
     }
