@@ -5,6 +5,9 @@ import com.accepted.match_api.service.MatchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +80,16 @@ public class MatchController {
     @Operation(summary = "Get all matches")
     public ResponseEntity<List<MatchDto>> getAllMatches() {
         return ResponseEntity.ok(matchService.findAll());
+    }
+
+    @GetMapping("/matches-paginated")
+    @Operation(summary = "Get all matches with pagination")
+    public Page<MatchDto> getMatchesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return matchService.getAllMatches(pageable);
     }
 
     @GetMapping("/{id}")

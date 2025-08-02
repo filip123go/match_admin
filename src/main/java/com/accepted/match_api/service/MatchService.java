@@ -7,6 +7,8 @@ import com.accepted.match_api.mapper.MatchMapper;
 import com.accepted.match_api.repository.MatchRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class MatchService {
         return matchRepository.findAll().stream()
                 .map(matchMapper::toDto)
                 .toList();
+    }
+    public Page<MatchDto> getAllMatches(Pageable pageable) {
+        return matchRepository.findAll(pageable).map(matchMapper::toDto);
     }
 
     public MatchDto findById(Long id) {
